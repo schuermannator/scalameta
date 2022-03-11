@@ -12,21 +12,22 @@ import scala.util.control.NonFatal
 trait SemanticdbPipeline extends SemanticdbOps { self: SemanticdbPlugin =>
   implicit class XtensionURI(uri: URI) { def toFile: File = new File(uri) }
   implicit class XtensionUnit(unit: g.CompilationUnit) {
-    def isIgnored: Boolean = {
-      val matchesExtension = {
-        val fileName = unit.source.file.name
-        fileName.endsWith(".scala") ||
-        fileName.endsWith(".sc") ||
-        fileName.endsWith(".java")
-      }
-      val matchesFilter = {
-        Option(unit.source.file)
-          .flatMap(f => Option(f.file))
-          .map(f => config.fileFilter.matches(f.getAbsolutePath))
-          .getOrElse(true)
-      }
-      !matchesExtension || !matchesFilter
-    }
+    def isIgnored: Boolean = false
+    // {
+    //   val matchesExtension = {
+    //     val fileName = unit.source.file.name
+    //     fileName.endsWith(".scala") ||
+    //     fileName.endsWith(".sc") ||
+    //     fileName.endsWith(".java")
+    //   }
+    //   val matchesFilter = {
+    //     Option(unit.source.file)
+    //       .flatMap(f => Option(f.file))
+    //       .map(f => config.fileFilter.matches(f.getAbsolutePath))
+    //       .getOrElse(true)
+    //   }
+    //   !matchesExtension || !matchesFilter
+    // }
   }
 
   def handleCrash(unit: Option[g.CompilationUnit]): PartialFunction[Throwable, Unit] = {
@@ -56,7 +57,7 @@ trait SemanticdbPipeline extends SemanticdbOps { self: SemanticdbPlugin =>
 
       def saveSemanticdbForCompilationUnit(unit: g.CompilationUnit): Unit = {
         try {
-          if (unit.isIgnored || !unit.source.isInSourceroot(config.sourceroot)) return
+          // if (unit.isIgnored || !unit.source.isInSourceroot(config.sourceroot)) return
           val sdoc = unit.toTextDocument
           sdoc.save(config.targetroot)
           PlatformTokenizerCache.megaCache.clear()

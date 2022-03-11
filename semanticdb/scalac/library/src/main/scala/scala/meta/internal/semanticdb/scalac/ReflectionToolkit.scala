@@ -19,7 +19,7 @@ trait ReflectionToolkit {
   // NOTE: InteractiveGlobal does not work with semanticdb-scalac, in scalameta/language-server
   // we tried to enable semanticdb-scalac with the presentation compiler and it resulted
   // in cryptic infinite while loops while completing scope members.
-  lazy val isSupportedCompiler = !isDocCompiler && !isReplCompiler && !isInteractiveCompiler
+  lazy val isSupportedCompiler = true
 
   // NOTE: this boilerplate is unfortunately necessary, because we don't expose Attachable in the public API
   trait Attachable[-T] {
